@@ -19,12 +19,12 @@ class Unmined {
             [(worldMinX + worldWidth) * worldMaxZoomFactor, -worldMinY * worldMaxZoomFactor]]);
 
         var viewProjection = new ol.proj.Projection({
-            code: 'ZOOMIFY',
+            code: 'VIEW',
             units: 'pixels',
         });
 
         var dataProjection = new ol.proj.Projection({
-            code: 'ZOOMIFY',
+            code: 'DATA',
             units: 'pixels',
         });
 
@@ -85,8 +85,8 @@ class Unmined {
                             };
                             const tileRegionSize = Math.ceil(tileBlockSize / 512);
 
-                            for (let x = tileRegionPoint.x; x < tileRegionPoint.x + tileRegionSize; x++){
-                                for (let z = tileRegionPoint.z; z < tileRegionPoint.z + tileRegionSize; z++){
+                            for (let x = tileRegionPoint.x; x < tileRegionPoint.x + tileRegionSize; x++) {
+                                for (let z = tileRegionPoint.z; z < tileRegionPoint.z + tileRegionSize; z++) {
                                     const group = {
                                         x: Math.floor(x / 32),
                                         z: Math.floor(z / 32)
@@ -136,8 +136,7 @@ class Unmined {
                 mousePositionControl
             ]),
             layers: [
-                unminedLayer,
-
+                unminedLayer,                
                 /*
                 new ol.layer.Tile({
                     source: new ol.source.TileDebug({
@@ -161,6 +160,59 @@ class Unmined {
             })
         });
 
+        if (options.markers)
+        {
+            var markersLayer = this.createMarkersLayer(options.markers, dataProjection, viewProjection);
+            map.addLayer(markersLayer);
+        }
+
         this.openlayersMap = map;
     }
+
+    createMarkersLayer(markers, dataProjection, viewProjection) {
+        var features = [];
+
+        for (var i = 0; i < markers.length; i++) {
+            var item = markers[i];
+            var longitude = item.x;
+            var latitude = item.z;
+
+            var feature = new ol.Feature({
+                geometry: new ol.geom.Point(ol.proj.transform([longitude, latitude], dataProjection, viewProjection))
+            });
+
+            var style = new ol.style.Style();
+            if (item.image)
+                style.setImage(new ol.style.Icon({
+                    src: item.image,
+                    anchor: item.imageAnchor,
+                    scale: item.imageScale
+                }));
+
+            if (item.text)
+                style.setText(new ol.style.Text({
+                    text: item.text,
+                    font: item.font,
+                    offsetX: item.offsetX,
+                    offsetY: item.offsetY,
+                    fill: new ol.style.Fill({
+                        color: item.textColor
+                    })
+                }));
+
+            feature.setStyle(style);
+
+            features.push(feature);
+        }
+
+        var vectorSource = new ol.source.Vector({
+            features: features
+        });
+
+        var vectorLayer = new ol.layer.Vector({
+            source: vectorSource
+        });
+        return vectorLayer;
+    }
+
 }

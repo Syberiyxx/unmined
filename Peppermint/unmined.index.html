@@ -21,6 +21,9 @@
     <script type="text/javascript" src="unmined.map.properties.js"></script>
     <script type="text/javascript" src="unmined.map.regions.js"></script>
 
+    <!-- Custom markers -->
+    <script type="text/javascript" src="custom.markers.js"></script>
+
     <!-- uNmINeD JS -->
     <script type="text/javascript" src="unmined.openlayers.js"></script>
 
@@ -66,6 +69,10 @@
     <script type="text/javascript">
 
         document.title = UnminedMapProperties.worldName + " - " + document.title;
+
+        if (UnminedCustomMarkers && UnminedCustomMarkers.isEnabled && UnminedCustomMarkers.markers) {
+            UnminedMapProperties.markers = UnminedMapProperties.markers.concat(UnminedCustomMarkers.markers);
+        }
 
         let unmined = new Unmined();
         unmined.map('map', UnminedMapProperties, UnminedRegions);
