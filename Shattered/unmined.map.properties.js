@@ -5,8 +5,8 @@ var UnminedMapProperties = {
     defaultZoom: 0,
     imageFormat: "webp",
     minRegionX: -2,
-    minRegionZ: -2,
-    maxRegionX: 1,
+    minRegionZ: -4,
+    maxRegionX: 2,
     maxRegionZ: 0,
     worldName: "shattered",
     markers: new Array()
