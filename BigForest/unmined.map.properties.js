@@ -9,5 +9,6 @@ var UnminedMapProperties = {
     maxRegionX: 44,
     maxRegionZ: 39,
     worldName: "BigForest",
+    background: "",
     markers: new Array()
 }

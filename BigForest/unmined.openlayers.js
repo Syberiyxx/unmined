@@ -131,7 +131,7 @@ class Unmined {
         });
 
         var map = new ol.Map({
-            target: 'map',
+            target: mapId,
             controls: ol.control.defaults().extend([
                 mousePositionControl
             ]),
@@ -160,10 +160,13 @@ class Unmined {
             })
         });
 
-        if (options.markers)
-        {
+        if (options.markers) {
             var markersLayer = this.createMarkersLayer(options.markers, dataProjection, viewProjection);
             map.addLayer(markersLayer);
+        }
+        
+        if (options.background){
+            document.getElementById(mapId).style.backgroundColor = options.background;
         }
 
         this.openlayersMap = map;
